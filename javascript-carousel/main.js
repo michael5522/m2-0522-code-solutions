@@ -154,72 +154,62 @@ for (var x = 0; x < forwardButtonAll.length; x++) {
     }
   });
 }
-// var libraryCounter = 0;
-// var library = [
-//   1, 2, 3, 4, 5
-// ];
-// setInterval(changeSlide, 3000);
+var libraryCounter = 0;
+var library = [
+  1, 2, 3, 4, 5
+];
+setInterval(changeSlide, 2000);
 
-// function changeSlide() {
-//   if (libraryCounter === library.length) {
-//     libraryCounter = 0;
-//   } else {
-//     libraryCounter++;
-//   }
-//   if (libraryCounter === 1) {
-//     tabAll[1].classList.add('active');
-//     tabAll[0].classList.remove('active');
-//     tabAll[2].classList.remove('active');
-//     tabAll[3].classList.remove('active');
-//     tabAll[4].classList.remove('active');
-//     viewAll[1].classList.remove('hidden');
-//     viewAll[0].classList.add('hidden');
-//     viewAll[2].classList.add('hidden');
-//     viewAll[3].classList.add('hidden');
-//     viewAll[4].classList.add('hidden');
-//   } else if (libraryCounter === 2) {
-//     tabAll[2].classList.add('active');
-//     tabAll[0].classList.remove('active');
-//     tabAll[1].classList.remove('active');
-//     tabAll[3].classList.remove('active');
-//     tabAll[4].classList.remove('active');
-//     viewAll[2].classList.remove('hidden');
-//     viewAll[0].classList.add('hidden');
-//     viewAll[1].classList.add('hidden');
-//     viewAll[3].classList.add('hidden');
-//     viewAll[4].classList.add('hidden');
-//   } else if (libraryCounter === 3) {
-//     tabAll[3].classList.add('active');
-//     tabAll[0].classList.remove('active');
-//     tabAll[1].classList.remove('active');
-//     tabAll[2].classList.remove('active');
-//     tabAll[4].classList.remove('active');
-//     viewAll[3].classList.remove('hidden');
-//     viewAll[0].classList.add('hidden');
-//     viewAll[1].classList.add('hidden');
-//     viewAll[2].classList.add('hidden');
-//     viewAll[4].classList.add('hidden');
-//   } else if (libraryCounter === 4) {
-//     tabAll[4].classList.add('active');
-//     tabAll[0].classList.remove('active');
-//     tabAll[1].classList.remove('active');
-//     tabAll[2].classList.remove('active');
-//     tabAll[3].classList.remove('active');
-//     viewAll[4].classList.remove('hidden');
-//     viewAll[0].classList.add('hidden');
-//     viewAll[1].classList.add('hidden');
-//     viewAll[2].classList.add('hidden');
-//     viewAll[3].classList.add('hidden');
-//   } else if (libraryCounter === 5) {
-//     tabAll[0].classList.add('active');
-//     tabAll[1].classList.remove('active');
-//     tabAll[2].classList.remove('active');
-//     tabAll[3].classList.remove('active');
-//     tabAll[4].classList.remove('active');
-//     viewAll[0].classList.remove('hidden');
-//     viewAll[1].classList.add('hidden');
-//     viewAll[2].classList.add('hidden');
-//     viewAll[3].classList.add('hidden');
-//     viewAll[4].classList.add('hidden');
-//   }
-// }
+function changeSlide() {
+  if (libraryCounter === library.length - 1) {
+    libraryCounter = 0;
+  } else {
+    libraryCounter++;
+  }
+  if (libraryCounter === 1) {
+    for (var p = 0; p < tabAll.length; p++) {
+      tabAll[p].classList.remove('active');
+    }
+    tabAll[1].classList.add('active');
+    for (var a = 0; a < viewAll.length; a++) {
+      viewAll[a].classList.add('hidden');
+    }
+    viewAll[1].classList.remove('hidden');
+  } else if (libraryCounter === 2) {
+    for (p = 0; p < tabAll.length; p++) {
+      tabAll[p].classList.remove('active');
+    }
+    tabAll[2].classList.add('active');
+    for (a = 0; a < viewAll.length; a++) {
+      viewAll[a].classList.add('hidden');
+    }
+    viewAll[2].classList.remove('hidden');
+  } else if (libraryCounter === 3) {
+    for (p = 0; p < tabAll.length; p++) {
+      tabAll[p].classList.remove('active');
+    }
+    tabAll[3].classList.add('active');
+    for (a = 0; a < viewAll.length; a++) {
+      viewAll[a].classList.add('hidden');
+    }
+    viewAll[3].classList.remove('hidden');
+  } else if (libraryCounter === 4) {
+    for (p = 0; p < tabAll.length; p++) {
+      tabAll[p].classList.remove('active');
+    }
+    tabAll[4].classList.add('active');
+    for (a = 0; a < viewAll.length; a++) {
+      viewAll[a].classList.add('hidden');
+    }
+    viewAll[4].classList.remove('hidden');
+  } else if (libraryCounter === 0) {
+    for (p = 0; p < tabAll.length; p++) {
+      tabAll[p].classList.remove('active');
+    }
+    tabAll[0].classList.add('active');
+    for (a = 0; a < viewAll.length; a++) {
+      viewAll[a].classList.add('hidden');
+    }
+    viewAll[0].classList.remove('hidden');
+  }
+}
