@@ -66,3 +66,7 @@ body {
 .hidden {
   display: none;
 }
+
+i {
+  cursor: pointer;
+}
