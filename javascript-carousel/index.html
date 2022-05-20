@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript Carousel</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-container">
+
+    <div class="view-container">
+
+      <div class="view" data-view="image1">
+        <i class="fa-solid fa-angle-left fa-5x previous one"></i>
+        <img src="./images/001.png" alt="" class="shield">
+        <i class="fa-solid fa-angle-right fa-5x forward one"></i>
+      </div>
+
+      <div class="view hidden" data-view="image2">
+        <i class="fa-solid fa-angle-left fa-5x previous two"></i>
+        <img src="./images/002.png" alt="" class="shield">
+        <i class="fa-solid fa-angle-right fa-5x forward two"></i>
+      </div>
+
+      <div class="view hidden" data-view="image3">
+        <i class="fa-solid fa-angle-left fa-5x previous three"></i>
+        <img src="./images/003.png" alt="" class="shield">
+        <i class="fa-solid fa-angle-right fa-5x forward three"></i>
+      </div>
+
+      <div class="view hidden" data-view="image4">
+        <i class="fa-solid fa-angle-left fa-5x previous four"></i>
+        <img src="./images/004.png" alt="" class="shield">
+        <i class="fa-solid fa-angle-right fa-5x forward four"></i>
+      </div>
+
+      <div class="view hidden" data-view="image5">
+        <i class="fa-solid fa-angle-left fa-5x previous five"></i>
+        <img src="./images/005.png" alt="" class="shield">
+        <i class="fa-solid fa-angle-right fa-5x forward five"></i>
+      </div>
+    </div>
+
+    <div class="tabbed-views">
+      <div class="tab-container">
+        <div class="tab active" data-view="image1"></div>
+        <div class="tab" data-view="image2"></div>
+        <div class="tab" data-view="image3"></div>
+        <div class="tab" data-view="image4"></div>
+        <div class="tab" data-view="image5"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
