@@ -3,8 +3,8 @@ const s = require('./subtract');
 const m = require('./multiply');
 const d = require('./divide');
 
-const first = parseInt(process.argv[2]);
-const second = parseInt(process.argv[4]);
+const first = parseFloat(process.argv[2]);
+const second = parseFloat(process.argv[4]);
 const star = process.argv[3];
 
 if (star === 'plus') {
