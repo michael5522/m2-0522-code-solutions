@@ -3,7 +3,7 @@ const fs = require('fs');
 
 const answer = process.argv[2];
 const input = process.argv[3];
-console.log('wat is going on +*-/', answer);
+const updateText = process.argv[4];
 
 if (answer === 'read') {
 
@@ -42,6 +42,20 @@ if (answer === 'delete') {
     if (err) throw err;
     const dataObj = JSON.parse(data);
     delete dataObj.notes[input];
+    const prettyObj = JSON.stringify(dataObj, null, 2);
+
+    fs.writeFile('data.json', prettyObj, err => {
+      if (err) throw err;
+    });
+  });
+}
+
+if (answer === 'update') {
+
+  fs.readFile('./data.json', 'utf8', (err, data) => {
+    if (err) throw err;
+    const dataObj = JSON.parse(data);
+    dataObj.notes[input] = updateText;
     const prettyObj = JSON.stringify(dataObj, null, 2);
 
     fs.writeFile('data.json', prettyObj, err => {
