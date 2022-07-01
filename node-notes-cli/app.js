@@ -51,15 +51,20 @@ if (answer === 'delete') {
 }
 
 if (answer === 'update') {
-
-  fs.readFile('./data.json', 'utf8', (err, data) => {
-    if (err) throw err;
-    const dataObj = JSON.parse(data);
-    dataObj.notes[input] = updateText;
-    const prettyObj = JSON.stringify(dataObj, null, 2);
-
-    fs.writeFile('data.json', prettyObj, err => {
+  if (answer && input && updateText) {
+    fs.readFile('./data.json', 'utf8', (err, data) => {
       if (err) throw err;
+
+      const dataObj = JSON.parse(data);
+
+      if (dataObj.notes[input]) {
+        dataObj.notes[input] = updateText;
+        const prettyObj = JSON.stringify(dataObj, null, 2);
+
+        fs.writeFile('data.json', prettyObj, err => {
+          if (err) throw err;
+        });
+      }
     });
-  });
+  }
 }
