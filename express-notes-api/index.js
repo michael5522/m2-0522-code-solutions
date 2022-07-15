@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 const fs = require('fs');
+app.use(express.json());
 
 app.get('/api/notes', (req, res) => {
   fs.readFile('./data.json', 'utf8', (err, data) => {
@@ -46,6 +47,49 @@ app.get('/api/notes/:id', (req, res) => {
     });
 
   });
+});
+
+app.post('/api/notes', (req, res) => {
+  const newNote = req.body;
+  if (!newNote.content) {
+    res.status(400).json({
+      error: 'content is a required field'
+    });
+    return;
+  }
+
+  fs.readFile('./data.json', 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      res.status(500);
+      res.json({
+        error: 'An unexpected error occurred.'
+      });
+    }
+    const dataObj = JSON.parse(data);
+    const dataNotes = dataObj.notes;
+
+    dataNotes[dataObj.nextId] = newNote;
+    dataNotes[dataObj.nextId].id = dataObj.nextId;
+    const answer = dataNotes[dataObj.nextId];
+    dataObj.nextId = dataObj.nextId += 1;
+
+    const prettyObj = JSON.stringify(dataObj, null, 2);
+    fs.writeFile('./data.json', prettyObj, err => {
+      if (err) {
+        console.error(err);
+        res.status(500);
+        res.json({
+          error: 'An unexpected error occurred.'
+        });
+      } else {
+        res.status(201);
+        res.json(answer);
+      }
+    });
+
+  });
+
 });
 
 app.listen(3000, () => {
