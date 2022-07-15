@@ -66,6 +66,7 @@ app.post('/api/notes', (req, res) => {
         error: 'An unexpected error occurred.'
       });
     }
+
     const dataObj = JSON.parse(data);
     const dataNotes = dataObj.notes;
 
@@ -87,6 +88,50 @@ app.post('/api/notes', (req, res) => {
         res.json(answer);
       }
     });
+  });
+
+});
+
+app.delete('/api/notes/:id', (req, res) => {
+  const requestedId = req.params.id;
+  if (requestedId < 0) {
+    res.status(400).json({
+      error: 'id must be a positive integer'
+    });
+    return;
+  }
+  fs.readFile('./data.json', 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      res.status(500);
+      res.json({
+        error: 'An unexpected error occurred.'
+      });
+    }
+
+    const dataObj = JSON.parse(data);
+    const dataNotes = dataObj.notes;
+
+    if (!dataNotes[requestedId]) {
+      res.status(404);
+      res.json({
+        error: `${requestedId} ID  does not exist`
+      });
+    } else {
+      delete dataNotes[requestedId];
+      const prettyObj = JSON.stringify(dataObj, null, 2);
+      fs.writeFile('./data.json', prettyObj, err => {
+        if (err) {
+          console.error(err);
+          res.status(500);
+          res.json({
+            error: 'An unexpected error occurred.'
+          });
+        } else {
+          res.sendStatus(204);
+        }
+      });
+    }
 
   });
 
