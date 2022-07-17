@@ -137,6 +137,62 @@ app.delete('/api/notes/:id', (req, res) => {
 
 });
 
+app.put('/api/notes/:id', (req, res) => {
+
+  const requestedId = parseInt(req.params.id);
+  if (requestedId < 0) {
+    res.status(400).json({
+      error: 'id must be a positive integer'
+    });
+    return;
+  }
+
+  const newNote = req.body;
+  if (!newNote.content) {
+    res.status(400).json({
+      error: 'content is a required field'
+    });
+    return;
+  }
+
+  fs.readFile('./data.json', 'utf8', (err, data) => {
+    if (err) {
+      console.error('123123214', err);
+      res.status(500);
+      res.json({
+        error: 'An unexpected error occurred.'
+      });
+    }
+
+    const dataObj = JSON.parse(data);
+    const dataNotes = dataObj.notes;
+
+    if (!dataNotes[requestedId]) {
+      res.status(404);
+      res.json({
+        error: `${requestedId} ID  does not exist`
+      });
+      return;
+    }
+
+    dataNotes[requestedId].content = newNote.content;
+    const prettyObj = JSON.stringify(dataObj, null, 2);
+    fs.writeFile('./data.json', prettyObj, err => {
+      if (err) {
+        console.error(err);
+        res.status(500);
+        res.json({
+          error: 'An unexpected error occurred.'
+        });
+      } else {
+        res.status(200);
+        res.json(dataNotes[requestedId]);
+      }
+    });
+  });
+
+});
+
 app.listen(3000, () => {
   // eslint-disable-next-line no-console
   console.log('Express server listening on port 3000');
