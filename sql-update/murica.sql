@@ -1,4 +1,4 @@
 update "countries"
       set "name" = 'Murica'
-where "countryId" = 103
+where "name" = 'United States'
 returning *;
