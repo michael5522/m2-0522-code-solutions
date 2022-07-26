@@ -5,5 +5,5 @@ answer.then(value => {
   console.log(value);
 });
 answer.catch(error => {
-  console.error(error);
+  console.error(error.message);
 });
