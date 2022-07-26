@@ -10,5 +10,7 @@ select
 from "castMembers"
 join "filmGenre" as "fg" using ("filmId")
 join "genres" as "g" using ("genreId")
-where "actorId" = 178
+join "actors" as "a" using ("actorId")
+where "a"."firstName" = 'Lisa' AND
+      "a"."lastName" = 'Monroe'
 group by "g"."name";
