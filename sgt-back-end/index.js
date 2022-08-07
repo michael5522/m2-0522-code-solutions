@@ -10,13 +10,15 @@ const db = new pg.Pool({
   }
 });
 
+app.use(express.json());
+
 app.get('/api/grades/:gradeId', (req, res, next) => {
   // validate the "inputs" FIRST
   const gradeId = Number(req.params.gradeId);
   // eslint-disable-next-line no-console
-  console.log(gradeId);
+  console.log('001', gradeId);
   // eslint-disable-next-line no-console
-  console.log(typeof gradeId);
+  console.log('002', typeof gradeId);
   if (!Number.isInteger(gradeId) || gradeId <= 0) {
     // there is no way that a matching grade could be found
     // so we immediately respond to the client and STOP the code
@@ -39,7 +41,7 @@ app.get('/api/grades/:gradeId', (req, res, next) => {
   // 👆 We are NOT putting the user input directly into our query
   const params = [gradeId];
   // eslint-disable-next-line no-console
-  console.log('11', params);
+  console.log('111 params', params);
   // 👆 instead, we are sending the user input in a separate array
   /**
    * review the documentation on parameterized queries here:
@@ -80,7 +82,7 @@ app.get('/api/grades/:gradeId', (req, res, next) => {
 
 app.get('/api/grades', (req, res, next) => {
   // eslint-disable-next-line no-console
-  console.log('111', 'ola');
+  console.log('API GRADES get ', 'ola');
   const sql = `
     select *
       from "grades"
@@ -100,7 +102,64 @@ app.get('/api/grades', (req, res, next) => {
       });
     });
 });
+/// POST
+///
+app.post('/api/grades', (req, res) => {
+  // eslint-disable-next-line no-console
+  console.log('post working');
+  const newStudent = req.body;
+  // eslint-disable-next-line no-console
+  console.log('111', newStudent);
 
+  if (!newStudent.name) {
+    // eslint-disable-next-line no-console
+    console.log('this kid has no name');
+    res.status(400).json({
+      error: 'must have a name'
+    });
+    return;
+  }
+
+  if (!newStudent.course) {
+    // eslint-disable-next-line no-console
+    console.log('this kid has no course');
+    res.status(400).json({
+      error: 'must have a course'
+    });
+    return;
+  }
+
+  if (newStudent.score < 0 || newStudent.score > 100) {
+    // eslint-disable-next-line no-console
+    console.log('the score is either below 0 or greater than 100:--- ', newStudent.score);
+    res.status(400).json({
+      error: `${newStudent.score} must be a valid number`
+    });
+    return;
+  }
+
+  const params = [newStudent.name, newStudent.course, newStudent.score];
+  // eslint-disable-next-line no-console
+  console.log('params 222 ', params);
+  const sql = `
+    insert into "grades" ("name", "course", "score")
+    values ($1,$2,$3)
+    returning *;
+  `;
+  db.query(sql, params)
+    .then(result => {
+      const grade = result.rows;
+      res.status(201).json(grade);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({
+        error: 'An unexpected error occurred.'
+      });
+    });
+
+});
+///
 app.listen(3000, () => {
   // eslint-disable-next-line no-console
   console.log('Express server listening on port 3000');
