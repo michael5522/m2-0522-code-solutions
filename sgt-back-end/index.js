@@ -129,6 +129,15 @@ app.post('/api/grades', (req, res) => {
     return;
   }
 
+  if (!newStudent.score) {
+    // eslint-disable-next-line no-console
+    console.log('this kid has no score');
+    res.status(400).json({
+      error: 'must have a score'
+    });
+    return;
+  }
+
   if (newStudent.score < 0 || newStudent.score > 100) {
     // eslint-disable-next-line no-console
     console.log('the score is either below 0 or greater than 100:--- ', newStudent.score);
@@ -150,6 +159,94 @@ app.post('/api/grades', (req, res) => {
     .then(result => {
       const grade = result.rows;
       res.status(201).json(grade);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({
+        error: 'An unexpected error occurred.'
+      });
+    });
+
+});
+///
+app.put('/api/grades/:gradeId', (req, res) => {
+  // eslint-disable-next-line no-console
+  console.log('put working');
+  const newStudent = req.body;
+  // eslint-disable-next-line no-console
+  console.log('111', newStudent);
+  const gradeID = parseInt(req.params.gradeId);
+  // eslint-disable-next-line no-console
+  console.log('222', typeof gradeID);
+
+  if (gradeID !== Number(gradeID) || gradeID < 1) {
+    // eslint-disable-next-line no-console
+    console.log('it is negative or non existant');
+    res.status(400).json({
+      error: 'must be greater than 0 or integer'
+    });
+    return;
+  }
+
+  if (!newStudent.name) {
+    // eslint-disable-next-line no-console
+    console.log('this kid has no name');
+    res.status(400).json({
+      error: 'must have a name'
+    });
+    return;
+  }
+
+  if (!newStudent.course) {
+    // eslint-disable-next-line no-console
+    console.log('this kid has no course');
+    res.status(400).json({
+      error: 'must have a course'
+    });
+    return;
+  }
+
+  if (!newStudent.score) {
+    // eslint-disable-next-line no-console
+    console.log('this kid has no score');
+    res.status(400).json({
+      error: 'must have a score'
+    });
+    return;
+  }
+
+  if (newStudent.score < 0 || newStudent.score > 100) {
+    // eslint-disable-next-line no-console
+    console.log('the score is either below 0 or greater than 100:--- ', newStudent.score);
+    res.status(400).json({
+      error: `${newStudent.score} must be a valid number`
+    });
+    // eslint-disable-next-line no-console
+    console.log('need a grade');
+    return;
+  }
+
+  const params = [newStudent.name, newStudent.course, newStudent.score, gradeID];
+  // eslint-disable-next-line no-console
+  console.log('params 222 ', params);
+  const sql = `
+    update "grades"
+    set "name" = $1,
+        "course" = $2,
+        "score" = $3
+    where "gradeId" = $4
+    returning *;
+  `;
+  db.query(sql, params)
+    .then(result => {
+      const updatedStudent = result.rows[0];
+      if (!updatedStudent) {
+        res.status(404).json({
+          error: ` ${gradeID} cannot be found`
+        });
+      } else {
+        res.status(200).json(updatedStudent);
+      }
     })
     .catch(err => {
       console.error(err);
