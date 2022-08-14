@@ -257,6 +257,52 @@ app.put('/api/grades/:gradeId', (req, res) => {
 
 });
 ///
+app.delete('/api/grades/:gradeId', (req, res) => {
+  // eslint-disable-next-line no-console
+  console.log('delete working');
+
+  const gradeID = parseInt(req.params.gradeId);
+  // eslint-disable-next-line no-console
+  console.log('222', typeof gradeID);
+
+  if (gradeID !== Number(gradeID) || gradeID < 1) {
+    // eslint-disable-next-line no-console
+    console.log('it is negative or non existant');
+    res.status(400).json({
+      error: 'must be greater than 0 or integer'
+    });
+    return;
+  }
+
+  const params = [gradeID];
+  // eslint-disable-next-line no-console
+  console.log('params 222 ', params);
+  const sql = `
+    delete from "grades"
+     where "gradeId" = $1
+    returning *;
+  `;
+  db.query(sql, params)
+    .then(result => {
+      const updatedStudent = result.rows[0];
+      if (!updatedStudent) {
+
+        res.status(404).json({
+          error: ` ${gradeID} cannot be found`
+        });
+      } else {
+
+        res.sendStatus(204);
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({
+        error: 'An unexpected error occurred.'
+      });
+    });
+
+});
 app.listen(3000, () => {
   // eslint-disable-next-line no-console
   console.log('Express server listening on port 3000');
