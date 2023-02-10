@@ -160,6 +160,43 @@ app.post('/api/test2/', (req, res) => {
   });
 });
 
+app.delete('/api/notes/:id', (req, res) => {
+  fs.readFile('./data2.json', (err, data) => {
+    if (err) throw err;
+    const parseData = JSON.parse(data);
+    const remove = parseInt(req.params.id);
+
+    if (remove <= 0) {
+      return res.status(400).json({
+        error: 'must be postive number'
+      });
+    }
+
+    if (!(parseData.notes[remove])) {
+      return res.status(404).json({
+        error: `this value ${remove} does not exist`
+      });
+    }
+    if (parseData.notes[remove]) {
+      delete parseData.notes[remove];
+      res.status(204).send('');
+    } else {
+      res.status(500).json({
+        error: 'an unexpected error occured'
+      });
+    }
+
+    const dataJSON = JSON.stringify(parseData, null, 2);
+    fs.writeFile('./data2.json', dataJSON, 'utf8', err => {
+      if (err) {
+        res.status(500).json({
+          error: 'an unexpected error occured'
+        });
+      }
+    });
+  });
+});
+
 app.listen('3000', () => {
   console.log('workin brah');
 });
