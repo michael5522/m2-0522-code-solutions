@@ -1,0 +1,41 @@
+{
+  "nextId": 15,
+  "notes": {
+    "2": {
+      "id": 2,
+      "content": "The event loop, this, closures, and prototypal inheritance are special about JavaScript."
+    },
+    "5": {
+      "id": 5,
+      "content": "In JavaScript, the value of `this` is determined when a function is called; not when it is defined."
+    },
+    "6": {
+      "id": 6,
+      "content": "A closure is formed when a function retains access to variables in its lexical scope."
+    },
+    "9": {
+      "id": 9,
+      "content": "i am hungry"
+    },
+    "10": {
+      "content": "oladd",
+      "id": 10
+    },
+    "11": {
+      "content": "fuck me in the butt god damn",
+      "id": 11
+    },
+    "12": {
+      "content": "fuck youe",
+      "id": 12
+    },
+    "13": {
+      "content": "go do your work",
+      "id": 13
+    },
+    "14": {
+      "content": "o m g greato doing good",
+      "id": 14
+    }
+  }
+}
