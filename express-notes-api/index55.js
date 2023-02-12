@@ -5,6 +5,7 @@ const fs = require('fs');
 const middleWare = express.json();
 app.use(middleWare);
 
+// get all notes
 app.get('/api/notes', (req, res) => {
   fs.readFile('./data.json', 'utf8', (err, data) => {
     if (err) throw err;
@@ -20,6 +21,7 @@ app.get('/api/notes', (req, res) => {
   });
 });
 
+// get 1 NOTE original
 app.get('/api/notes/:id', (req, res) => {
   const numba = parseInt(req.params.id);
   console.log(numba);
@@ -50,6 +52,7 @@ app.get('/api/notes/:id', (req, res) => {
   });
 });
 
+// get 1 NOTE GOOD ver
 app.get('/api/test2/:pp', (req, res) => {
   const numba = parseInt(req.params.pp);
   console.log(numba);
@@ -77,6 +80,7 @@ app.get('/api/test2/:pp', (req, res) => {
   });
 });
 
+// post a note normal
 app.post('/api/notes', (req, res) => {
   if (!req.body.content) {
     return res.status(400).json({
@@ -121,6 +125,7 @@ app.post('/api/notes', (req, res) => {
 
 });
 
+// post a note good version
 app.post('/api/test2/', (req, res) => {
   fs.readFile('./data2.json', (err, data) => {
     if (err) {
@@ -161,38 +166,224 @@ app.post('/api/test2/', (req, res) => {
 });
 
 app.delete('/api/notes/:id', (req, res) => {
+  const numba = parseInt(req.params.id);
+  if (numba <= 0) {
+    return res.status(400).json({
+      error: 'needs to be a postive integer'
+    });
+  }
+
   fs.readFile('./data2.json', (err, data) => {
-    if (err) throw err;
-    const parseData = JSON.parse(data);
-    const remove = parseInt(req.params.id);
-
-    if (remove <= 0) {
-      return res.status(400).json({
-        error: 'must be postive number'
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        error: 'an unexpected error occured'
       });
     }
+    const dataObj = JSON.parse(data);
+    const notes = dataObj.notes;
 
-    if (!(parseData.notes[remove])) {
-      return res.status(404).json({
-        error: `this value ${remove} does not exist`
+    if (!notes[numba]) {
+      res.status(404).json({
+        error: `${numba} no exist`
       });
     }
-    if (parseData.notes[remove]) {
-      delete parseData.notes[remove];
-      res.status(204).send('');
+    for (const property in notes) {
+      const gg = notes[property];
+
+      if (gg.id === numba) {
+        res.sendStatus(204);
+        delete notes[numba];
+      }
+    }
+    console.log(notes);
+  });
+});
+
+app.delete('/api/fml/:id', (req, res) => {
+  const mustMatch = parseInt(req.params.id);
+  console.log(mustMatch);
+  if (mustMatch <= 0) {
+    return res.status(400).json({
+      error: `${mustMatch} must be a valid id`
+    });
+  }
+
+  fs.readFile('./data2.json', 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        error: 'an unexpedtred error occured'
+      });
+    }
+    const dataObj = JSON.parse(data);
+    const notes = dataObj.notes;
+
+    if (!notes[mustMatch]) {
+      res.status(404).json({
+        error: `valid id but  ${mustMatch} not found`
+      });
     } else {
+      delete notes[mustMatch];
+      console.log(notes);
+      const prettyObj = JSON.stringify(dataObj, null, 2);
+      fs.writeFile('data2.json', prettyObj, 'utf8', err => {
+        if (err) {
+          res.status(500).json({
+            error: 'an unexpected error occured'
+          });
+        }
+      });
+      res.sendStatus(204);
+
+    }
+
+  });
+});
+
+app.delete('/api/omg/:ppman', (req, res) => {
+  const gg = req.params.ppman;
+  console.log(gg);
+
+  fs.readFile('./data2.json', (err, data) => {
+    if (err) {
       res.status(500).json({
         error: 'an unexpected error occured'
       });
     }
 
-    const dataJSON = JSON.stringify(parseData, null, 2);
-    fs.writeFile('./data2.json', dataJSON, 'utf8', err => {
+    const parseData = JSON.parse(data);
+    const data2 = parseData.notes;
+
+    if (gg <= 0) {
+      res.status(400).json({
+        error: `${gg} needs to be a postive intiger`
+      });
+    }
+
+    if (!data2[gg]) {
+      res.status(404).json({
+        error: `${gg} is good but not in the list`
+      });
+    } else {
+      delete data2[gg];
+      console.log(data2);
+      const prettyJson = JSON.stringify(parseData, null, 2);
+      fs.writeFile('data2.json', prettyJson, err => {
+        if (err) {
+          res.status(500).json({
+            error: 'an unexpected error'
+          });
+        } else {
+          res.sendStatus(204);
+        }
+      });
+    }
+
+  });
+});
+
+app.put('/api/notes/:id', (req, res) => {
+  const gg = parseInt(req.params.id);
+  const content = req.body.content;
+  console.log(gg, content);
+
+  if (gg <= 0 || !content) {
+    res.status(400).json({
+      error: 'it is not a postive number or does not contain the property content'
+    });
+  }
+  fs.readFile('./data2.json', (err, data) => {
+    if (err) {
+      res.status(500).json({
+        error: 'an unexpected error occured'
+      });
+    }
+    const parseObject = JSON.parse(data);
+    const notes = parseObject.notes;
+    if (!notes[gg]) {
+      res.status(404).json({
+        error: ` ${gg} no found`
+      });
+    }
+
+    for (const property in notes) {
+      console.log('xxx', notes[property]);
+      const current = notes[property];
+
+      if (current.id === gg) {
+        console.log('this shit got matched', current);
+        notes[gg].content = content;
+        console.log(notes);
+        const prettyObj = JSON.stringify(parseObject, null, 2);
+        fs.writeFile('./data2.json', prettyObj, err => {
+          if (err) {
+            res.status(500).json({
+              error: 'an unexpected error'
+            });
+          }
+          res.status(200).json(current);
+        });
+
+      }
+
+    }
+
+  });
+
+});
+
+app.put('/alfredo/:chicken123', (req, res) => {
+  const abcd = req.body;
+  const rparameter = parseInt(req.params.chicken123);
+  // console.log(rparameter);
+  // console.log('req body', abcd);
+
+  if (rparameter <= 0) {
+    return res.status(400).json({
+      error: 'need to be pos int'
+    });
+  }
+  if (!abcd.content) {
+    return res.status(400).json({
+      error: 'need to have content'
+    });
+  }
+
+  fs.readFile('./data2.json', 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        error: 'unexpected error'
+      });
+    }
+
+    const parsedData = JSON.parse(data);
+    const notes = parsedData.notes;
+    // console.log(notes);
+
+    if (!notes[rparameter]) {
+      return res.status(404).json({
+        error: `valid ${rparameter} but not here`
+      });
+    }
+
+    const answer = notes[rparameter];
+    console.log('xxx', answer);
+    notes[rparameter].content = abcd.content;
+    console.log(notes);
+
+    const prettyObj = JSON.stringify(parsedData, null, 2);
+    fs.writeFile('./data2.json', prettyObj, err => {
       if (err) {
+        console.error(err);
         res.status(500).json({
-          error: 'an unexpected error occured'
+          error: 'unexpected error'
         });
       }
+      res.status(200).json({
+        answer
+      });
     });
   });
 });
